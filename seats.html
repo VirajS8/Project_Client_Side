@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOCTALE</title>
+  <link rel="stylesheet" href="client-style.css">
+</head>
+<body>
+
+<header class="navbar scrolled">
+  <div class="nav-brand">
+    <a href="index.html" style="text-decoration:none"><span class="nav-logo"><img src="unnamed.webp" alt="MOCTALE Logo">MOCTALE</span></a>
+  </div>
+  <nav class="nav-links">
+    <a href="index.html" id="nav-home">Home</a>
+    <a href="movies.html" id="nav-movies">Movies</a>
+    <a href="shows.html" id="nav-shows">Shows</a>
+    <a href="my-bookings.html" id="nav-bookings">My Bookings</a>
+    <a href="offers.html" id="nav-offers">Offers</a>
+  </nav>
+    <div class="nav-actions">
+    <a href="login.html" class="btn btn-primary btn-sm" id="nav-login-btn">Login</a>
+    <div class="user-avatar-wrap" id="user-avatar-wrap" style="display:none">
+      <div class="nav-avatar" id="nav-avatar-btn" onclick="toggleAvatarMenu()">V</div>
+      <div class="avatar-dropdown" id="avatar-dropdown">
+        <div class="avatar-dropdown-name" id="avatar-name">My Account</div>
+        <a href="my-bookings.html" class="avatar-dropdown-item">🎟️ My Bookings</a>
+        <div class="avatar-dropdown-divider"></div>
+        <button class="avatar-dropdown-item avatar-logout" onclick="logoutUser()">🚪 Logout</button>
+      </div>
+    </div>
+  </div>
+  </header>
+
+<div class="page-wrap">
+<div class="seat-page">
+
+  <!-- Show Info Bar -->
+  <div class="selected-show-bar" id="seat-show-bar" style="margin-bottom:36px">
+    <div class="show-bar-info">
+      <div class="show-bar-item"><label>Movie</label><strong id="seat-movie">—</strong></div>
+      <div class="show-bar-item"><label>Theatre</label><strong id="seat-theatre">—</strong></div>
+      <div class="show-bar-item"><label>Time</label><strong id="seat-time">—</strong></div>
+      <div class="show-bar-item"><label>Date</label><strong id="seat-date">—</strong></div>
+    </div>
+    <a href="shows.html" class="btn btn-ghost btn-sm">Change Show</a>
+  </div>
+
+  <!-- Screen -->
+  <div class="cinema-screen">
+    <div class="screen-label">S C R E E N</div>
+    <div class="screen-glow"></div>
+  </div>
+
+  <!-- Legend -->
+  <div style="text-align:center;margin-bottom:6px">
+    <span class="badge badge-gold" style="font-size:12px;padding:5px 14px">PREMIUM — ₹350/seat &nbsp;|&nbsp; REGULAR — ₹250/seat</span>
+  </div>
+
+  <!-- Seat Layout -->
+  <div class="seat-layout" id="seat-layout"></div>
+
+  <div class="seat-legend" id="seat-legend">
+    <div class="legend-item"><div class="legend-box available"></div><span>Available</span></div>
+    <div class="legend-item"><div class="legend-box selected-l"></div><span>Selected</span></div>
+    <div class="legend-item"><div class="legend-box booked-l"></div><span>Booked</span></div>
+    <div class="legend-item"><div class="legend-box premium-l"></div><span>Premium</span></div>
+  </div>
+
+  <!-- Booking Bar -->
+  <div class="booking-bar" id="booking-bar">
+    <div class="booking-bar-info">
+      <div class="booking-bar-item"><label>Selected Seats</label><strong id="selected-seats-label">None</strong></div>
+      <div class="booking-bar-item"><label>Tickets</label><strong id="ticket-count">0</strong></div>
+      <div class="booking-bar-item"><label>Total Amount</label><strong id="total-amount" style="color:var(--primary);font-size:20px">₹0</strong></div>
+    </div>
+    <button class="btn btn-primary btn-lg" id="proceed-btn" onclick="proceedToPayment()" disabled style="opacity:0.5">
+      Confirm Booking →
+    </button>
+  </div>
+
+</div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© 2026 MOCTALE Pvt. Ltd. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+  // Load show info from sessionStorage
+  const movieName    = sessionStorage.getItem('movie')   || 'Inception';
+  const theatreName  = sessionStorage.getItem('theatre') || 'PVR Cinemas';
+  const showTime     = sessionStorage.getItem('time')    || '07:30 PM';
+  const selectedDate = sessionStorage.getItem('date')    || new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  const moviePoster  = sessionStorage.getItem('poster')  || '1.jpeg';
+
+  document.getElementById('seat-movie').textContent   = movieName;
+  document.getElementById('seat-theatre').textContent = theatreName;
+  document.getElementById('seat-time').textContent    = showTime;
+  document.getElementById('seat-date').textContent    = selectedDate;
+
+  // Seat config
+  const rows         = ['A','B','C','D','E','F','G','H'];
+  const seatsPerRow  = 10;
+  const premiumRows  = ['A','B'];
+  const bookedSeats  = ['A3','A7','B2','B8','C4','C5','D1','D9','E6','F3','F7','G2','H5','H8'];
+  const prices       = { premium: 350, regular: 250 };
+  let selectedSeats  = [];
+
+  function buildSeats() {
+    const layout = document.getElementById('seat-layout');
+    rows.forEach(row => {
+      const rowDiv  = document.createElement('div');
+      rowDiv.className = 'seat-row';
+      const label   = document.createElement('span');
+      label.className = 'row-label';
+      label.textContent = row;
+      rowDiv.appendChild(label);
+      for (let i = 1; i <= seatsPerRow; i++) {
+        if (i === 6) { const g = document.createElement('div'); g.className = 'seat-gap'; rowDiv.appendChild(g); }
+        const seatId = row + i;
+        const btn    = document.createElement('button');
+        btn.className = 'seat' + (premiumRows.includes(row) ? ' premium' : '') + (bookedSeats.includes(seatId) ? ' booked' : '');
+        btn.textContent = i;
+        btn.id = 'seat-' + seatId;
+        btn.title = seatId;
+        if (!bookedSeats.includes(seatId)) btn.onclick = () => toggleSeat(btn, seatId, premiumRows.includes(row));
+        rowDiv.appendChild(btn);
+      }
+      layout.appendChild(rowDiv);
+    });
+  }
+
+  function toggleSeat(btn, id, isPremium) {
+    const idx = selectedSeats.indexOf(id);
+    if (idx === -1) {
+      if (selectedSeats.length >= 8) { showToast('Max 8 seats per booking', 'error'); return; }
+      selectedSeats.push(id);
+      btn.classList.add('selected');
+    } else {
+      selectedSeats.splice(idx, 1);
+      btn.classList.remove('selected');
+    }
+    updateSummary();
+  }
+
+  function updateSummary() {
+    const count = selectedSeats.length;
+    document.getElementById('ticket-count').textContent         = count;
+    document.getElementById('selected-seats-label').textContent = count ? selectedSeats.join(', ') : 'None';
+    let total = 0;
+    selectedSeats.forEach(s => { total += premiumRows.includes(s[0]) ? prices.premium : prices.regular; });
+    document.getElementById('total-amount').textContent = '₹' + total.toLocaleString('en-IN');
+    const btn = document.getElementById('proceed-btn');
+    btn.disabled      = count === 0;
+    btn.style.opacity = count ? '1' : '0.5';
+  }
+
+  function proceedToPayment() {
+    if (!selectedSeats.length) return;
+
+    // Build total
+    let total = 0;
+    selectedSeats.forEach(s => { total += premiumRows.includes(s[0]) ? prices.premium : prices.regular; });
+
+    // Create booking object
+    const booking = {
+      id:       'MCT-' + Date.now(),
+      movie:    movieName,
+      theatre:  theatreName,
+      location: sessionStorage.getItem('theatreLocation') || '',
+      time:     showTime,
+      date:     selectedDate,
+      seats:    selectedSeats.join(', '),
+      tickets:  selectedSeats.length,
+      amount:   total,
+      poster:   moviePoster,
+      status:   'upcoming',
+      format:   sessionStorage.getItem('format') || '2D',
+      bookedOn: new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})
+    };
+
+    // Save to localStorage
+    const existing = JSON.parse(localStorage.getItem('moctale_bookings') || '[]');
+    existing.unshift(booking);
+    localStorage.setItem('moctale_bookings', JSON.stringify(existing));
+
+    showToast('🎉 Booking Confirmed! Redirecting…', 'success');
+    setTimeout(() => window.location.href = 'my-bookings.html', 1500);
+  }
+
+  function showToast(msg, type) {
+    const wrap  = document.getElementById('toast-wrap');
+    const toast = document.createElement('div');
+    toast.className = 'toast ' + (type || 'info');
+    const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+    toast.innerHTML = '<span class="toast-icon">' + (icons[type]||'ℹ️') + '</span><span class="toast-msg">' + msg + '</span>';
+    wrap.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  buildSeats();
+</script>
+</body>
+</html>

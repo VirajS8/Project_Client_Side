@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOCTALE</title>
+  <meta name="description" content="MOCTALE – Your ultimate movie ticket booking platform. Browse movies, pick your seats and book instantly.">
+  <link rel="stylesheet" href="client-style.css">
+</head>
+
+<body>
+
+  <!-- ── NAVBAR ─────────────────────────────────────────────── -->
+  <header class="navbar" id="navbar">
+    <div class="nav-brand">
+      <a href="index.html" style="text-decoration:none">
+        <span class="nav-logo"><img src="unnamed.webp" alt="MOCTALE Logo">MOCTALE</span>
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html" class="active" id="nav-home">Home</a>
+      <a href="movies.html" id="nav-movies">Movies</a>
+      <a href="shows.html" id="nav-shows">Shows</a>
+      <a href="my-bookings.html" id="nav-bookings">My Bookings</a>
+      <a href="offers.html" id="nav-offers">Offers</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-primary btn-sm" id="nav-login-btn">Login</a>
+      <div class="user-avatar-wrap" id="user-avatar-wrap" style="display:none">
+        <div class="nav-avatar" id="nav-avatar-btn" onclick="toggleAvatarMenu()">V</div>
+        <div class="avatar-dropdown" id="avatar-dropdown">
+          <div class="avatar-dropdown-name" id="avatar-name">Viraj</div>
+          <a href="my-bookings.html" class="avatar-dropdown-item">🎟️ My Bookings</a>
+          <div class="avatar-dropdown-divider"></div>
+          <button class="avatar-dropdown-item avatar-logout" onclick="logoutUser()">🚪 Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── HERO ───────────────────────────────────────────────── -->
+  <section class="hero" id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-particles"></div>
+
+    <div class="hero-visual">
+      <div class="hero-movie-grid">
+        <div class="hero-movie-poster" style="grid-row:span 2"><img src="5.webp" alt=""></div>
+        <div class="hero-movie-poster"><img src="1.jpeg" alt=""></div>
+        <div class="hero-movie-poster"><img src="7.webp" alt=""></div>
+        <div class="hero-movie-poster"><img src="2.jpg" alt=""></div>
+        <div class="hero-movie-poster"><img src="8.webp" alt=""></div>
+        <div class="hero-movie-poster"><img src="4.webp" alt=""></div>
+        <div class="hero-movie-poster"><img src="6.webp" alt=""></div>
+      </div>
+    </div>
+
+    <div class="container" style="position:relative;z-index:1">
+      <div class="hero-content fade-in">
+        <div class="hero-tag">🎬 Now Showing in Theatres Near You</div>
+        <h1 style="margin-top:32px">Your <span class="highlight">Cinematic</span><br>Journey Starts<br>Here</h1>
+        <p class="hero-sub">Discover blockbusters, book seats instantly, and experience cinema like never before — all in one place.</p>
+
+        <div class="hero-cta">
+          <a href="movies.html" class="btn btn-primary btn-lg" id="hero-book-btn">🎟️ Book Tickets</a>
+          <a href="movies.html" class="btn btn-outline btn-lg" id="hero-browse-btn">Browse Movies</a>
+        </div>
+
+        <!-- Search -->
+        <div class="search-wrap" style="max-width:480px" id="hero-search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="hero-search" placeholder="Search movies, theatres, shows…" autocomplete="off">
+          <button class="btn btn-primary btn-sm" onclick="doSearch()" id="hero-search-btn">Search</button>
+        </div>
+
+        <div class="hero-stats" style="margin-top:36px">
+          <div class="stat-item">
+            <div class="stat-num">500+</div>
+            <div class="stat-label">Movies Available</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">50+</div>
+            <div class="stat-label">Partner Theatres</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">2M+</div>
+            <div class="stat-label">Happy Customers</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── NOW SHOWING ────────────────────────────────────────── -->
+  <section class="section" id="now-showing">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Now <span>Showing</span></h2>
+          <div class="section-line"></div>
+        </div>
+        <a href="movies.html" class="btn btn-ghost btn-sm" id="view-all-movies">View All →</a>
+      </div>
+
+      <!-- Genre Tabs -->
+      <div class="genre-tabs" style="margin-bottom:28px" id="genre-tabs">
+        <button class="genre-tab active" onclick="filterGenre('all',this)" id="tab-all">All</button>
+        <button class="genre-tab" onclick="filterGenre('action',this)" id="tab-action">Action</button>
+        <button class="genre-tab" onclick="filterGenre('scifi',this)" id="tab-scifi">Sci-Fi</button>
+        <button class="genre-tab" onclick="filterGenre('drama',this)" id="tab-drama">Drama</button>
+        <button class="genre-tab" onclick="filterGenre('biography',this)" id="tab-bio">Biography</button>
+      </div>
+
+      <div class="movie-grid" id="home-movie-grid">
+
+        <div class="movie-card fade-in" data-genre="thriller scifi" id="card-inception">
+          <div class="movie-poster">
+            <img src="1.jpeg" alt="Inception" loading="lazy">
+            <div class="poster-rating">⭐ 8.8</div>
+            <span class="poster-badge"><span class="badge badge-red">HOT</span></span>
+            <div class="poster-overlay"></div>
+          </div>
+          <div class="movie-info">
+            <h3>Inception</h3>
+            <div class="movie-genre">Sci-Fi · Thriller</div>
+            <a href="shows.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center" id="book-inception-2" onclick="goBook('Inception','1.jpeg')">Book Tickets</a>
+          </div>
+        </div>
+
+        <div class="movie-card fade-in" data-genre="scifi drama" id="card-interstellar">
+          <div class="movie-poster">
+            <img src="2.jpg" alt="Interstellar" loading="lazy">
+            <div class="poster-rating">⭐ 8.6</div>
+            <div class="poster-overlay"></div>
+          </div>
+          <div class="movie-info">
+            <h3>Interstellar</h3>
+            <div class="movie-genre">Sci-Fi · Drama</div>
+            <a href="shows.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center" id="book-interstellar-2" onclick="goBook('Interstellar','2.jpg')">Book Tickets</a>
+          </div>
+        </div>
+
+        <div class="movie-card fade-in" data-genre="action scifi" id="card-spiderman">
+          <div class="movie-poster">
+            <img src="5.webp" alt="Spider-Man" loading="lazy">
+            <div class="poster-rating">⭐ 8.2</div>
+            <span class="poster-badge"><span class="badge badge-green">NEW</span></span>
+            <div class="poster-overlay"></div>
+          </div>
+          <div class="movie-info">
+            <h3>Spider-Man: NWH</h3>
+            <div class="movie-genre">Action · Adventure</div>
+            <a href="shows.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center" id="book-spiderman-2" onclick="goBook('Spider-Man: NWH','5.webp')">Book Tickets</a>
+          </div>
+        </div>
+
+        <div class="movie-card fade-in" data-genre="drama biography" id="card-oppenheimer">
+          <div class="movie-poster">
+            <img src="4.webp" alt="Oppenheimer" loading="lazy">
+            <div class="poster-rating">⭐ 8.5</div>
+            <span class="poster-badge"><span class="badge badge-gold">TOP</span></span>
+            <div class="poster-overlay"></div>
+          </div>
+          <div class="movie-info">
+            <h3>Oppenheimer</h3>
+            <div class="movie-genre">Drama · Biography</div>
+            <a href="shows.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center" id="book-oppenheimer-2" onclick="goBook('Oppenheimer','4.webp')">Book Tickets</a>
+          </div>
+        </div>
+
+        <div class="movie-card fade-in" data-genre="action drama" id="card-topgun">
+          <div class="movie-poster">
+            <img src="8.webp" alt="Top Gun Maverick" loading="lazy">
+            <div class="poster-rating">⭐ 8.3</div>
+            <div class="poster-overlay"></div>
+          </div>
+          <div class="movie-info">
+            <h3>Top Gun: Maverick</h3>
+            <div class="movie-genre">Action · Drama</div>
+            <a href="shows.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center" id="book-topgun-2" onclick="goBook('Top Gun: Maverick','8.webp')">Book Tickets</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── UPCOMING / COMING SOON ─────────────────────────────── -->
+  <section class="section" id="upcoming-section" style="padding-top:0">
+    <div class="container">
+      <div class="section-divider"><span>Coming Soon</span></div>
+      <div class="movie-grid" id="upcoming-grid">
+
+        <div class="movie-card upcoming-card fade-in" id="card-arrival">
+          <div class="movie-poster" style="position:relative">
+            <img src="3.jpeg" alt="Arrival" loading="lazy">
+            <div class="poster-rating">⭐ 7.9</div>
+            <div class="poster-overlay"></div>
+          </div>
+          <div class="movie-info">
+            <h3>Arrival</h3>
+            <div class="movie-genre">Sci-Fi · Drama</div>
+            <div class="upcoming-badge">🗓️ Releasing Nov 15, 2026</div>
+          </div>
+        </div>
+
+        <div class="movie-card upcoming-card fade-in" id="card-mj">
+          <div class="movie-poster" style="position:relative">
+            <img src="6.webp" alt="Michael Jackson" loading="lazy">
+            <div class="poster-rating">⭐ 7.9</div>
+            <div class="poster-overlay"></div>
+          </div>
+          <div class="movie-info">
+            <h3>Michael Jackson</h3>
+            <div class="movie-genre">Biography · Music</div>
+            <div class="upcoming-badge">🗓️ Releasing Nov 20, 2026</div>
+          </div>
+        </div>
+
+        <div class="movie-card upcoming-card fade-in" id="card-alien">
+          <div class="movie-poster" style="position:relative">
+            <img src="7.webp" alt="Alien: Romulus" loading="lazy">
+            <div class="poster-rating">⭐ 7.4</div>
+            <div class="poster-overlay"></div>
+          </div>
+          <div class="movie-info">
+            <h3>Alien: Romulus</h3>
+            <div class="movie-genre">Sci-Fi · Thriller</div>
+            <div class="upcoming-badge">🗓️ Releasing Nov 25, 2026</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FEATURED MOVIE ─────────────────────────────────────── -->
+  <section class="section section-alt" id="featured-section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Editor's <span>Pick</span></h2>
+          <div class="section-line"></div>
+        </div>
+      </div>
+      <div class="featured-card fade-in" id="featured-card">
+        <div class="featured-poster">
+          <img src="4.webp" alt="Featured Movie">
+        </div>
+        <div class="featured-body">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+            <span class="badge badge-red">EDITOR'S PICK</span>
+            <span class="badge badge-gold">⭐ 8.5</span>
+            <span class="badge badge-blue">UA</span>
+          </div>
+          <h2 class="featured-title">Oppenheimer</h2>
+          <div class="featured-meta">
+            <span style="color:var(--text-muted);font-size:14px">🎬 Drama · Biography</span>
+            <span style="color:var(--text-muted);font-size:14px">⏱ 3h 0m</span>
+            <span style="color:var(--text-muted);font-size:14px">🌐 English</span>
+          </div>
+          <p class="featured-desc">The story of J. Robert Oppenheimer and his role in the development of the atomic bomb during World War II. A cinematic masterstroke from Christopher Nolan — gripping, immersive, and unforgettable.</p>
+          <div class="featured-actions">
+            <a href="shows.html" class="btn btn-primary" id="featured-book-btn" onclick="goBook('Oppenheimer','4.webp')">🎟️ Book Tickets</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FEATURES STRIP ─────────────────────────────────────── -->
+  <section class="section section-alt" id="features-section">
+    <div class="container">
+      <div class="section-header" style="margin-bottom:28px">
+        <div>
+          <h2 class="section-title">Why Choose <span>MOCTALE</span>?</h2>
+          <div class="section-line"></div>
+        </div>
+      </div>
+      <div class="features-strip" id="features-strip">
+        <div class="feature-item">
+          <div class="feature-icon">🎟️</div>
+          <h3>Instant Booking</h3>
+          <p>Book tickets in seconds with our lightning-fast checkout.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">💺</div>
+          <h3>Choose Your Seat</h3>
+          <p>Pick your perfect seat from an interactive seat map.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">💰</div>
+          <h3>Best Offers</h3>
+          <p>Exclusive discounts, bank offers and combo deals daily.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📱</div>
+          <h3>E-Tickets</h3>
+          <p>Get your tickets on email &amp; mobile instantly after booking.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────── -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2026 MOCTALE Pvt. Ltd. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast-wrap" id="toast-wrap"></div>
+
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Genre filter
+    function filterGenre(genre, btn) {
+      document.querySelectorAll('.genre-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('#home-movie-grid .movie-card').forEach(card => {
+        if (genre === 'all' || card.dataset.genre?.includes(genre)) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Search
+    function doSearch() {
+      const q = document.getElementById('hero-search').value.trim();
+      if (q) window.location.href = 'movies.html?q=' + encodeURIComponent(q);
+    }
+    document.getElementById('hero-search').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doSearch();
+    });
+
+    function goBook(movie, poster) {
+      sessionStorage.setItem('movie', movie);
+      sessionStorage.setItem('poster', poster);
+    }
+
+    // Toast
+    function showToast(msg, type = 'info') {
+      const wrap = document.getElementById('toast-wrap');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+      toast.innerHTML = `<span class="toast-icon">${icons[type]}</span><span class="toast-msg">${msg}</span>`;
+      wrap.appendChild(toast);
+      setTimeout(() => toast.remove(), 3500);
+    }
+
+    // ── Auth State ──
+    (function checkAuth() {
+      const user = localStorage.getItem('moctaleUser');
+      const loginBtn = document.getElementById('nav-login-btn');
+      const avatarWrap = document.getElementById('user-avatar-wrap');
+      if (user) {
+        loginBtn.style.display = 'none';
+        avatarWrap.style.display = 'flex';
+        try {
+          const u = JSON.parse(user);
+          const initial = (u.first || 'V')[0].toUpperCase();
+          document.getElementById('nav-avatar-btn').textContent = initial;
+          const name = ((u.first || '') + ' ' + (u.last || '')).trim();
+          document.getElementById('avatar-name').textContent = name || 'My Account';
+        } catch(e) {}
+      } else {
+        loginBtn.style.display = '';
+        avatarWrap.style.display = 'none';
+      }
+    })();
+
+    function toggleAvatarMenu() {
+      document.getElementById('avatar-dropdown').classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      const wrap = document.getElementById('user-avatar-wrap');
+      if (wrap && !wrap.contains(e.target)) {
+        const dd = document.getElementById('avatar-dropdown');
+        if (dd) dd.classList.remove('open');
+      }
+    });
+    function logoutUser() {
+      localStorage.removeItem('moctaleUser');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+
+</html>

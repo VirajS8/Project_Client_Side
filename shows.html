@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOCTALE</title>
+  <meta name="description" content="Choose your theatre, date and showtime on MOCTALE to book your movie tickets.">
+  <link rel="stylesheet" href="client-style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar scrolled" id="navbar">
+  <div class="nav-brand">
+    <a href="index.html" style="text-decoration:none"><span class="nav-logo"><img src="unnamed.webp" alt="MOCTALE Logo">MOCTALE</span></a>
+  </div>
+  <nav class="nav-links">
+    <a href="index.html" id="nav-home">Home</a>
+    <a href="movies.html" id="nav-movies">Movies</a>
+    <a href="shows.html" class="active" id="nav-shows">Shows</a>
+    <a href="my-bookings.html" id="nav-bookings">My Bookings</a>
+    <a href="offers.html" id="nav-offers">Offers</a>
+  </nav>
+    <div class="nav-actions">
+    <a href="login.html" class="btn btn-primary btn-sm" id="nav-login-btn">Login</a>
+    <div class="user-avatar-wrap" id="user-avatar-wrap" style="display:none">
+      <div class="nav-avatar" id="nav-avatar-btn" onclick="toggleAvatarMenu()">V</div>
+      <div class="avatar-dropdown" id="avatar-dropdown">
+        <div class="avatar-dropdown-name" id="avatar-name">My Account</div>
+        <a href="my-bookings.html" class="avatar-dropdown-item">🎟️ My Bookings</a>
+        <div class="avatar-dropdown-divider"></div>
+        <button class="avatar-dropdown-item avatar-logout" onclick="logoutUser()">🚪 Logout</button>
+      </div>
+    </div>
+  </div>
+  </header>
+
+<div class="page-wrap">
+<div class="container" style="padding-top:40px;padding-bottom:60px">
+
+  <!-- Page Header -->
+  <div class="page-header" id="shows-header">
+    <h1>🎭 Theatre & <span style="color:var(--primary)">Shows</span></h1>
+    <p>Select your preferred date, theatre and showtime</p>
+  </div>
+
+  <!-- Selected Movie Banner -->
+  <div class="selected-show-bar" id="selected-movie-bar">
+    <div class="show-bar-info">
+      <div class="show-bar-item">
+        <label>Movie</label>
+        <strong id="selected-movie-name">Inception</strong>
+      </div>
+      <div class="show-bar-item">
+        <label>Genre</label>
+        <strong>Sci-Fi · Thriller</strong>
+      </div>
+      <div class="show-bar-item">
+        <label>Duration</label>
+        <strong>2h 28m</strong>
+      </div>
+      <div class="show-bar-item">
+        <label>Language</label>
+        <strong>English</strong>
+      </div>
+    </div>
+    <a href="movies.html" class="btn btn-ghost btn-sm" id="change-movie-btn">Change Movie</a>
+  </div>
+
+  <!-- City Selector -->
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap">
+    <label style="font-weight:600;color:var(--text-muted);font-size:14px">📍 City:</label>
+    <select id="city-select" style="max-width:220px" onchange="updateCity()">
+      <option>Mumbai</option>
+      <option>Delhi</option>
+      <option>Bengaluru</option>
+      <option>Ahmedabad</option>
+      <option>Surat</option>
+      <option>Hyderabad</option>
+      <option>Chennai</option>
+      <option>Kolkata</option>
+    </select>
+    <select id="format-select" style="max-width:160px">
+      <option>All Formats</option>
+      <option>2D</option>
+      <option>3D</option>
+      <option>IMAX</option>
+      <option>4DX</option>
+    </select>
+  </div>
+
+  <!-- Date Picker -->
+  <h3 style="font-size:16px;font-weight:700;margin-bottom:14px;color:var(--text-muted)">SELECT DATE</h3>
+  <div class="date-row" id="date-row"></div>
+
+  <!-- Theatres -->
+  <h3 style="font-size:16px;font-weight:700;margin-bottom:18px;color:var(--text-muted)" id="theatres-heading">THEATRES IN MUMBAI</h3>
+
+  <!-- Theatre 1 -->
+  <div class="theatre-card" id="theatre-pvr">
+    <div class="theatre-header">
+      <div>
+        <div class="theatre-name">🎬 PVR Cinemas</div>
+        <div class="theatre-location">📍 Phoenix Palladium, Lower Parel</div>
+      </div>
+      <div class="theatre-amenities">
+        <span class="badge badge-blue">IMAX</span>
+        <span class="badge badge-gold">4DX</span>
+        <span class="badge badge-green">Dolby</span>
+      </div>
+    </div>
+    <div class="show-times" id="pvr-showtimes">
+      <button class="show-time-btn" onclick="selectShow(this,'PVR Cinemas','10:30 AM','Phoenix Palladium, Lower Parel')" id="pvr-1030">10:30 AM<span class="avail">Fast Filling</span></button>
+      <button class="show-time-btn" onclick="selectShow(this,'PVR Cinemas','01:15 PM','Phoenix Palladium, Lower Parel')" id="pvr-0115">01:15 PM<span class="avail">Available</span></button>
+      <button class="show-time-btn" onclick="selectShow(this,'PVR Cinemas','04:00 PM','Phoenix Palladium, Lower Parel')" id="pvr-0400">04:00 PM<span class="avail">Available</span></button>
+      <button class="show-time-btn" onclick="selectShow(this,'PVR Cinemas','07:30 PM','Phoenix Palladium, Lower Parel')" id="pvr-0730">07:30 PM<span class="avail">Almost Full</span></button>
+      <button class="show-time-btn" onclick="selectShow(this,'PVR Cinemas','10:45 PM','Phoenix Palladium, Lower Parel')" id="pvr-1045">10:45 PM<span class="avail">Available</span></button>
+    </div>
+  </div>
+
+  <!-- Theatre 2 -->
+  <div class="theatre-card" id="theatre-inox">
+    <div class="theatre-header">
+      <div>
+        <div class="theatre-name">🎥 INOX Megaplex</div>
+        <div class="theatre-location">📍 R-City Mall, Ghatkopar</div>
+      </div>
+      <div class="theatre-amenities">
+        <span class="badge badge-blue">3D</span>
+        <span class="badge badge-green">Dolby</span>
+      </div>
+    </div>
+    <div class="show-times" id="inox-showtimes">
+      <button class="show-time-btn" onclick="selectShow(this,'INOX Megaplex','11:00 AM','R-City Mall, Ghatkopar')" id="inox-1100">11:00 AM<span class="avail">Available</span></button>
+      <button class="show-time-btn" onclick="selectShow(this,'INOX Megaplex','02:00 PM','R-City Mall, Ghatkopar')" id="inox-0200">02:00 PM<span class="avail">Fast Filling</span></button>
+      <button class="show-time-btn" onclick="selectShow(this,'INOX Megaplex','05:15 PM','R-City Mall, Ghatkopar')" id="inox-0515">05:15 PM<span class="avail">Available</span></button>
+      <button class="show-time-btn" onclick="selectShow(this,'INOX Megaplex','08:30 PM','R-City Mall, Ghatkopar')" id="inox-0830">08:30 PM<span class="avail">Almost Full</span></button>
+    </div>
+  </div>
+
+  <!-- Theatre 3 -->
+  <div class="theatre-card" id="theatre-cinepolis">
+    <div class="theatre-header">
+      <div>
+        <div class="theatre-name">🍿 Cinépolis</div>
+        <div class="theatre-location">📍 Viviana Mall, Thane</div>
+      </div>
+      <div class="theatre-amenities">
+        <span class="badge badge-blue">2D</span>
+        <span class="badge badge-blue">3D</span>
+        <span class="badge badge-gold">VIP</span>
+      </div>
+    </div>
+    <div class="show-times" id="cinepolis-showtimes">
+      <button class="show-time-btn" onclick="selectShow(this,'Cinépolis','12:30 PM','Viviana Mall, Thane')" id="cinepolis-1230">12:30 PM<span class="avail">Available</span></button>
+      <button class="show-time-btn" onclick="selectShow(this,'Cinépolis','03:45 PM','Viviana Mall, Thane')" id="cinepolis-0345">03:45 PM<span class="avail">Fast Filling</span></button>
+      <button class="show-time-btn" onclick="selectShow(this,'Cinépolis','06:30 PM','Viviana Mall, Thane')" id="cinepolis-0630">06:30 PM<span class="avail">Available</span></button>
+      <button class="show-time-btn" onclick="selectShow(this,'Cinépolis','09:30 PM','Viviana Mall, Thane')" id="cinepolis-0930">09:30 PM<span class="avail">Available</span></button>
+    </div>
+  </div>
+
+  <!-- Theatre 4 -->
+  <div class="theatre-card" id="theatre-carnival">
+    <div class="theatre-header">
+      <div>
+        <div class="theatre-name">🎞️ Carnival Cinemas</div>
+        <div class="theatre-location">📍 Infiniti Mall, Malad</div>
+      </div>
+      <div class="theatre-amenities">
+        <span class="badge badge-blue">2D</span>
+        <span class="badge badge-green">Surround</span>
+      </div>
+    </div>
+    <div class="show-times" id="carnival-showtimes">
+      <button class="show-time-btn" onclick="selectShow(this,'Carnival Cinemas','10:00 AM','Infiniti Mall, Malad')" id="carnival-1000">10:00 AM<span class="avail">Available</span></button>
+      <button class="show-time-btn" onclick="selectShow(this,'Carnival Cinemas','01:30 PM','Infiniti Mall, Malad')" id="carnival-0130">01:30 PM<span class="avail">Available</span></button>
+      <button class="show-time-btn" onclick="selectShow(this,'Carnival Cinemas','04:45 PM','Infiniti Mall, Malad')" id="carnival-0445">04:45 PM<span class="avail">Fast Filling</span></button>
+      <button class="show-time-btn" onclick="selectShow(this,'Carnival Cinemas','08:00 PM','Infiniti Mall, Malad')" id="carnival-0800">08:00 PM<span class="avail">Almost Full</span></button>
+      <button class="show-time-btn" onclick="selectShow(this,'Carnival Cinemas','11:00 PM','Infiniti Mall, Malad')" id="carnival-1100">11:00 PM<span class="avail">Available</span></button>
+    </div>
+  </div>
+
+  <!-- Continue Button -->
+  <div style="text-align:center;margin-top:36px">
+    <a href="seats.html" id="continue-btn" class="btn btn-primary btn-lg">
+      Continue to Seat Selection →
+    </a>
+  </div>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© 2026 MOCTALE Pvt. Ltd. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+  // Generate date buttons
+  (function() {
+    const row = document.getElementById('date-row');
+    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const today = new Date();
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+      const btn = document.createElement('button');
+      btn.className = 'date-btn' + (i === 0 ? ' active' : '');
+      btn.id = 'date-btn-' + i;
+      btn.innerHTML = `<span class="day">${days[d.getDay()]}</span><span class="num">${d.getDate()}</span><span class="mon">${months[d.getMonth()]}</span>`;
+      btn.onclick = function() {
+        document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+      };
+      row.appendChild(btn);
+    }
+  })();
+
+  let selectedTheatre = '', selectedTime = '';
+
+  function selectShow(btn, theatre, time, location) {
+    document.querySelectorAll('.show-time-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedTheatre = theatre;
+    selectedTime = time;
+
+    // Get selected date label
+    const activeDate = document.querySelector('.date-btn.active');
+    const dateLabel = activeDate ? activeDate.innerText.replace('\n',' ') : new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+
+    // Store everything in sessionStorage
+    sessionStorage.setItem('theatre', theatre);
+    sessionStorage.setItem('theatreLocation', location || '');
+    sessionStorage.setItem('time', time);
+    sessionStorage.setItem('date', dateLabel);
+    sessionStorage.setItem('movie', document.getElementById('selected-movie-name').textContent);
+    sessionStorage.setItem('poster', sessionStorage.getItem('poster') || '1.jpeg');
+    sessionStorage.setItem('format', document.getElementById('format-select').value || '2D');
+
+    showToast('✅ Selected: ' + theatre + ' • ' + time, 'success');
+  }
+
+  function updateCity() {
+    const city = document.getElementById('city-select').value;
+    document.getElementById('theatres-heading').textContent = `THEATRES IN ${city.toUpperCase()}`;
+  }
+
+  function showToast(msg, type = 'info') {
+    const wrap = document.getElementById('toast-wrap');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+    toast.innerHTML = `<span class="toast-icon">${icons[type]}</span><span class="toast-msg">${msg}</span>`;
+    wrap.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  // ── Auth State (shows/hides V avatar) ──
+  (function checkAuth() {
+    const user = localStorage.getItem('moctaleUser');
+    const loginBtn = document.getElementById('nav-login-btn');
+    const avatarWrap = document.getElementById('user-avatar-wrap');
+    if (user) {
+      if (loginBtn) loginBtn.style.display = 'none';
+      avatarWrap.style.display = 'flex';
+      try {
+        const u = JSON.parse(user);
+        const initial = (u.first || 'V')[0].toUpperCase();
+        document.getElementById('nav-avatar-btn').textContent = initial;
+        const name = ((u.first || '') + ' ' + (u.last || '')).trim();
+        document.getElementById('avatar-name').textContent = name || 'My Account';
+      } catch(e) {}
+    } else {
+      if (loginBtn) loginBtn.style.display = '';
+      avatarWrap.style.display = 'none';
+    }
+  })();
+
+  function toggleAvatarMenu() {
+    document.getElementById('avatar-dropdown').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    const wrap = document.getElementById('user-avatar-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      const dd = document.getElementById('avatar-dropdown');
+      if (dd) dd.classList.remove('open');
+    }
+  });
+  function logoutUser() {
+    localStorage.removeItem('moctaleUser');
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+</html>
