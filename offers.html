@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOCTALE</title>
+  <meta name="description" content="Exclusive movie ticket deals, discounts, and offers on MOCTALE.">
+  <link rel="stylesheet" href="client-style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar scrolled" id="navbar">
+  <div class="nav-brand">
+    <a href="index.html" style="text-decoration:none"><span class="nav-logo"><img src="unnamed.webp" alt="MOCTALE Logo">MOCTALE</span></a>
+  </div>
+  <nav class="nav-links">
+    <a href="index.html" id="nav-home">Home</a>
+    <a href="movies.html" id="nav-movies">Movies</a>
+    <a href="shows.html" id="nav-shows">Shows</a>
+    <a href="my-bookings.html" id="nav-bookings">My Bookings</a>
+    <a href="offers.html" class="active" id="nav-offers">Offers</a>
+  </nav>
+    <div class="nav-actions">
+    <a href="login.html" class="btn btn-primary btn-sm" id="nav-login-btn">Login</a>
+    <div class="user-avatar-wrap" id="user-avatar-wrap" style="display:none">
+      <div class="nav-avatar" id="nav-avatar-btn" onclick="toggleAvatarMenu()">V</div>
+      <div class="avatar-dropdown" id="avatar-dropdown">
+        <div class="avatar-dropdown-name" id="avatar-name">My Account</div>
+        <a href="my-bookings.html" class="avatar-dropdown-item">🎟️ My Bookings</a>
+        <div class="avatar-dropdown-divider"></div>
+        <button class="avatar-dropdown-item avatar-logout" onclick="logoutUser()">🚪 Logout</button>
+      </div>
+    </div>
+  </div>
+  </header>
+
+<div class="page-wrap">
+<div class="container" style="padding-bottom:60px">
+
+  <!-- Offers Hero -->
+  <div class="offers-hero" id="offers-hero">
+    <h1>🏷️ Exclusive <span style="color:var(--primary)">Offers</span></h1>
+    <p>Save big on your next movie with our handpicked deals, bank discounts and combo offers.</p>
+    <div class="bank-logos" id="bank-logos">
+      <span class="bank-chip">HDFC Bank</span>
+      <span class="bank-chip">SBI Card</span>
+      <span class="bank-chip">ICICI Bank</span>
+      <span class="bank-chip">Axis Bank</span>
+      <span class="bank-chip">Paytm</span>
+      <span class="bank-chip">PhonePe</span>
+    </div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="genre-tabs" style="margin-bottom:32px" id="offer-tabs">
+    <button class="genre-tab active" onclick="filterOffers('all',this)" id="otab-all">All Offers</button>
+    <button class="genre-tab" onclick="filterOffers('bank',this)" id="otab-bank">Bank Offers</button>
+    <button class="genre-tab" onclick="filterOffers('combo',this)" id="otab-combo">Food Combos</button>
+    <button class="genre-tab" onclick="filterOffers('student',this)" id="otab-student">Student</button>
+    <button class="genre-tab" onclick="filterOffers('weekend',this)" id="otab-weekend">Weekend</button>
+    <button class="genre-tab" onclick="filterOffers('loyalty',this)" id="otab-loyalty">Loyalty</button>
+  </div>
+
+  <!-- Offers Grid -->
+  <div class="offers-grid" id="offers-grid">
+
+    <!-- Offer 1 -->
+    <div class="offer-card" data-type="bank" id="offer-hdfc">
+      <div class="offer-header">
+        <span class="offer-icon">🏦</span>
+        <span class="offer-discount">20% OFF</span>
+      </div>
+      <div class="offer-title">HDFC Bank Credit Card</div>
+      <div class="offer-desc">Get 20% instant discount on movie tickets when you pay with any HDFC Bank Credit Card. Maximum discount ₹150 per transaction. Valid on all movies.</div>
+      <div class="offer-code-wrap">
+        <span class="offer-code" id="code-hdfc">HDFC20</span>
+        <button class="copy-btn" id="copy-hdfc" onclick="copyCode('HDFC20','copy-hdfc')">Copy</button>
+      </div>
+      <div class="offer-validity">⏰ Valid till: 31 Dec 2026 &nbsp;·&nbsp; Max ₹150 off</div>
+      <a href="movies.html" class="btn btn-primary btn-sm" style="margin-top:16px;display:inline-flex" id="use-hdfc-btn">Book Now with Offer</a>
+    </div>
+
+    <!-- Offer 2 -->
+    <div class="offer-card" data-type="bank" id="offer-sbi">
+      <div class="offer-header">
+        <span class="offer-icon">💳</span>
+        <span class="offer-discount">₹100 OFF</span>
+      </div>
+      <div class="offer-title">SBI Credit Card Cashback</div>
+      <div class="offer-desc">Flat ₹100 cashback on minimum booking of ₹400 using SBI Credit Card. Cashback credited within 7 working days. Applicable once per month per card.</div>
+      <div class="offer-code-wrap">
+        <span class="offer-code" id="code-sbi">SBI100</span>
+        <button class="copy-btn" id="copy-sbi" onclick="copyCode('SBI100','copy-sbi')">Copy</button>
+      </div>
+      <div class="offer-validity">⏰ Valid till: 31 Dec 2026 &nbsp;·&nbsp; Min booking ₹400</div>
+      <a href="movies.html" class="btn btn-primary btn-sm" style="margin-top:16px;display:inline-flex" id="use-sbi-btn">Book Now with Offer</a>
+    </div>
+
+    <!-- Offer 3 -->
+    <div class="offer-card" data-type="combo" id="offer-popcorn">
+      <div class="offer-header">
+        <span class="offer-icon">🍿</span>
+        <span class="offer-discount">Free Combo</span>
+      </div>
+      <div class="offer-title">Popcorn + Drink Combo Free</div>
+      <div class="offer-desc">Book 2 or more tickets for any Friday show and get 1 Large Popcorn + 1 Cold Drink absolutely free. Redeemable at the theatre counter on show day.</div>
+      <div class="offer-code-wrap">
+        <span class="offer-code" id="code-popcorn">FRIDAYFUN</span>
+        <button class="copy-btn" id="copy-popcorn" onclick="copyCode('FRIDAYFUN','copy-popcorn')">Copy</button>
+      </div>
+      <div class="offer-validity">⏰ Fridays Only &nbsp;·&nbsp; Min 2 tickets</div>
+      <a href="movies.html" class="btn btn-primary btn-sm" style="margin-top:16px;display:inline-flex" id="use-combo-btn">Book Now with Offer</a>
+    </div>
+
+    <!-- Offer 4 -->
+    <div class="offer-card" data-type="student" id="offer-student">
+      <div class="offer-header">
+        <span class="offer-icon">🎓</span>
+        <span class="offer-discount">30% OFF</span>
+      </div>
+      <div class="offer-title">Student Special Discount</div>
+      <div class="offer-desc">Are you a student? Show your valid student ID at the counter and get flat 30% off on ticket price on any Monday to Thursday show. Applicable on regular seats only.</div>
+      <div class="offer-code-wrap">
+        <span class="offer-code" id="code-student">STUDENT30</span>
+        <button class="copy-btn" id="copy-student" onclick="copyCode('STUDENT30','copy-student')">Copy</button>
+      </div>
+      <div class="offer-validity">⏰ Mon–Thu only &nbsp;·&nbsp; Valid student ID required</div>
+      <a href="movies.html" class="btn btn-primary btn-sm" style="margin-top:16px;display:inline-flex" id="use-student-btn">Book Now with Offer</a>
+    </div>
+
+    <!-- Offer 5 -->
+    <div class="offer-card" data-type="weekend" id="offer-weekend">
+      <div class="offer-header">
+        <span class="offer-icon">🎉</span>
+        <span class="offer-discount">Buy 2 Get 1</span>
+      </div>
+      <div class="offer-title">Weekend Movie Fiesta</div>
+      <div class="offer-desc">Buy any 2 movie tickets on Saturday or Sunday and get the 3rd ticket absolutely free! Perfect for a family outing or movie night with friends. No card restriction.</div>
+      <div class="offer-code-wrap">
+        <span class="offer-code" id="code-weekend">WEEKEND3</span>
+        <button class="copy-btn" id="copy-weekend" onclick="copyCode('WEEKEND3','copy-weekend')">Copy</button>
+      </div>
+      <div class="offer-validity">⏰ Sat &amp; Sun only &nbsp;·&nbsp; Min 2 tickets</div>
+      <a href="movies.html" class="btn btn-primary btn-sm" style="margin-top:16px;display:inline-flex" id="use-weekend-btn">Book Now with Offer</a>
+    </div>
+
+    <!-- Offer 6 -->
+    <div class="offer-card" data-type="loyalty" id="offer-loyalty">
+      <div class="offer-header">
+        <span class="offer-icon">👑</span>
+        <span class="offer-discount">₹200 OFF</span>
+      </div>
+      <div class="offer-title">MOCTALE Loyalty Points</div>
+      <div class="offer-desc">Earn 10 MOCTALE points for every ₹100 spent. Redeem 500 points for ₹200 off on your next booking. Points never expire. Premium members earn 2x points!</div>
+      <div class="offer-code-wrap">
+        <span class="offer-code" id="code-loyalty">LOYALTYREWARD</span>
+        <button class="copy-btn" id="copy-loyalty" onclick="copyCode('LOYALTYREWARD','copy-loyalty')">Copy</button>
+      </div>
+      <div class="offer-validity">⏰ Always valid &nbsp;·&nbsp; Min 500 points</div>
+      <a href="login.html" class="btn btn-primary btn-sm" style="margin-top:16px;display:inline-flex" id="use-loyalty-btn">Login to Redeem</a>
+    </div>
+
+    <!-- Offer 7 -->
+    <div class="offer-card" data-type="bank" id="offer-paytm">
+      <div class="offer-header">
+        <span class="offer-icon">📱</span>
+        <span class="offer-discount">₹75 OFF</span>
+      </div>
+      <div class="offer-title">Paytm Wallet Offer</div>
+      <div class="offer-desc">Pay with Paytm Wallet and get ₹75 instant cashback on your first booking on MOCTALE. Offer valid once per Paytm account. Minimum order value ₹250.</div>
+      <div class="offer-code-wrap">
+        <span class="offer-code" id="code-paytm">PAYTM75</span>
+        <button class="copy-btn" id="copy-paytm" onclick="copyCode('PAYTM75','copy-paytm')">Copy</button>
+      </div>
+      <div class="offer-validity">⏰ Valid till: 31 Dec 2026 &nbsp;·&nbsp; Min ₹250</div>
+      <a href="movies.html" class="btn btn-primary btn-sm" style="margin-top:16px;display:inline-flex" id="use-paytm-btn">Book Now with Offer</a>
+    </div>
+
+    <!-- Offer 8 -->
+    <div class="offer-card" data-type="combo" id="offer-family">
+      <div class="offer-header">
+        <span class="offer-icon">👨‍👩‍👧‍👦</span>
+        <span class="offer-discount">Family Pack</span>
+      </div>
+      <div class="offer-title">Family Pack — 4 Tickets at ₹799</div>
+      <div class="offer-desc">Book 4 regular tickets in a single transaction for just ₹799 (save up to ₹200). Includes 2 Large Popcorns. Valid on select family-friendly movies. Advance booking required.</div>
+      <div class="offer-code-wrap">
+        <span class="offer-code" id="code-family">FAMILY4</span>
+        <button class="copy-btn" id="copy-family" onclick="copyCode('FAMILY4','copy-family')">Copy</button>
+      </div>
+      <div class="offer-validity">⏰ Weekdays only &nbsp;·&nbsp; 4 tickets exactly</div>
+      <a href="movies.html" class="btn btn-primary btn-sm" style="margin-top:16px;display:inline-flex" id="use-family-btn">Book Now with Offer</a>
+    </div>
+
+  </div>
+
+  <!-- Terms -->
+  <div style="text-align:center;padding:32px;color:var(--text-dim);font-size:13px;border-top:1px solid var(--card-border);margin-top:40px">
+    <p>All offers are subject to availability and theatre terms. Discounts cannot be combined unless stated. MOCTALE reserves the right to modify or withdraw offers at any time.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© 2026 MOCTALE Pvt. Ltd. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+  function filterOffers(type, btn) {
+    document.querySelectorAll('.genre-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#offers-grid .offer-card').forEach(card => {
+      card.style.display = (type === 'all' || card.dataset.type === type) ? '' : 'none';
+    });
+  }
+
+  function copyCode(code, btnId) {
+    navigator.clipboard.writeText(code).catch(() => {});
+    const btn = document.getElementById(btnId);
+    btn.textContent = '✅ Copied!';
+    btn.style.background = 'var(--green)';
+    setTimeout(() => { btn.textContent = 'Copy'; btn.style.background = ''; }, 2000);
+    showToast('Code "' + code + '" copied to clipboard!', 'success');
+  }
+
+  function showToast(msg, type) {
+    const wrap = document.getElementById('toast-wrap');
+    const toast = document.createElement('div');
+    toast.className = 'toast ' + (type || 'info');
+    const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+    toast.innerHTML = '<span class="toast-icon">' + (icons[type] || 'ℹ️') + '</span><span class="toast-msg">' + msg + '</span>';
+    wrap.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  // ── Auth State (shows/hides V avatar) ──
+  (function checkAuth() {
+    const user = localStorage.getItem('moctaleUser');
+    const loginBtn = document.getElementById('nav-login-btn');
+    const avatarWrap = document.getElementById('user-avatar-wrap');
+    if (user) {
+      if (loginBtn) loginBtn.style.display = 'none';
+      avatarWrap.style.display = 'flex';
+      try {
+        const u = JSON.parse(user);
+        const initial = (u.first || 'V')[0].toUpperCase();
+        document.getElementById('nav-avatar-btn').textContent = initial;
+        const name = ((u.first || '') + ' ' + (u.last || '')).trim();
+        document.getElementById('avatar-name').textContent = name || 'My Account';
+      } catch(e) {}
+    } else {
+      if (loginBtn) loginBtn.style.display = '';
+      avatarWrap.style.display = 'none';
+    }
+  })();
+
+  function toggleAvatarMenu() {
+    document.getElementById('avatar-dropdown').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    const wrap = document.getElementById('user-avatar-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      const dd = document.getElementById('avatar-dropdown');
+      if (dd) dd.classList.remove('open');
+    }
+  });
+  function logoutUser() {
+    localStorage.removeItem('moctaleUser');
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+</html>

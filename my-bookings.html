@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOCTALE</title>
+  <link rel="stylesheet" href="client-style.css">
+</head>
+<body>
+
+<header class="navbar scrolled" id="navbar">
+  <div class="nav-brand">
+    <a href="index.html" style="text-decoration:none"><span class="nav-logo"><img src="unnamed.webp" alt="MOCTALE Logo">MOCTALE</span></a>
+  </div>
+  <nav class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="movies.html">Movies</a>
+    <a href="shows.html">Shows</a>
+    <a href="my-bookings.html" class="active">My Bookings</a>
+    <a href="offers.html">Offers</a>
+  </nav>
+  <div class="nav-actions">
+    <a href="login.html" class="btn btn-primary btn-sm" id="nav-login-btn" style="display:none">Login</a>
+    <div class="user-avatar-wrap" id="user-avatar-wrap">
+      <div class="nav-avatar" id="nav-avatar-btn" onclick="toggleAvatarMenu()">V</div>
+      <div class="avatar-dropdown" id="avatar-dropdown">
+        <div class="avatar-dropdown-name" id="avatar-name">My Account</div>
+        <a href="my-bookings.html" class="avatar-dropdown-item">🎟️ My Bookings</a>
+        <div class="avatar-dropdown-divider"></div>
+        <button class="avatar-dropdown-item avatar-logout" onclick="logoutUser()">🚪 Logout</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="page-wrap">
+<div class="container" style="padding-top:40px;padding-bottom:60px">
+
+  <!-- Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:32px">
+    <div>
+      <h1 style="font-size:32px;font-weight:800;letter-spacing:-0.5px">🎟️ My <span style="color:var(--primary)">Bookings</span></h1>
+      <p style="color:var(--text-muted);margin-top:4px;font-size:14px">All your movie bookings in one place</p>
+    </div>
+    <a href="movies.html" class="btn btn-primary" id="book-more-btn">+ Book More Tickets</a>
+  </div>
+
+  <!-- Stats Strip -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;margin-bottom:28px" id="booking-stats">
+    <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:18px;text-align:center">
+      <div style="font-size:26px;font-weight:900;color:var(--primary)" id="stat-total">0</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Total Bookings</div>
+    </div>
+    <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:18px;text-align:center">
+      <div style="font-size:26px;font-weight:900;color:var(--green)" id="stat-upcoming">0</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Upcoming</div>
+    </div>
+    <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:18px;text-align:center">
+      <div style="font-size:26px;font-weight:900;color:var(--text-muted)" id="stat-completed">0</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Completed</div>
+    </div>
+    <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:18px;text-align:center">
+      <div style="font-size:26px;font-weight:900;color:var(--gold)" id="stat-spent">₹0</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Total Spent</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div style="display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap" id="bookings-tabs">
+    <button class="genre-tab active" id="tab-all"       onclick="filterBookings('all',this)">All</button>
+    <button class="genre-tab"        id="tab-upcoming"  onclick="filterBookings('upcoming',this)">Upcoming</button>
+    <button class="genre-tab"        id="tab-completed" onclick="filterBookings('completed',this)">Completed</button>
+    <button class="genre-tab"        id="tab-cancelled" onclick="filterBookings('cancelled',this)">Cancelled</button>
+  </div>
+
+  <!-- Bookings List -->
+  <div id="bookings-list"></div>
+
+  <!-- Empty state -->
+  <div id="empty-state" style="display:none;text-align:center;padding:60px 20px">
+    <div style="font-size:60px;margin-bottom:16px">🎭</div>
+    <h3 style="font-weight:700;margin-bottom:8px">No bookings yet</h3>
+    <p style="color:var(--text-muted);margin-bottom:20px">Book a movie ticket to see it here</p>
+    <a href="movies.html" class="btn btn-primary">Browse Movies</a>
+  </div>
+
+</div>
+</div>
+
+<!-- E-Ticket Modal -->
+<div id="ticket-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9000;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)closeTicket()">
+  <div id="ticket-box" style="background:var(--bg-2);border:1px solid var(--card-border);border-radius:var(--radius);padding:36px;max-width:420px;width:100%;text-align:center">
+    <div style="font-size:40px;margin-bottom:10px">🎫</div>
+    <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:4px">MOCTALE</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:20px;letter-spacing:1px">E-TICKET</div>
+    <div id="ticket-content" style="background:var(--bg-3);border-radius:10px;padding:18px;text-align:left;margin-bottom:16px;font-size:13px;line-height:2;color:var(--text-muted)"></div>
+    <div style="border:2px dashed var(--card-border);border-radius:8px;padding:14px;margin-bottom:18px">
+      <div style="font-size:40px;letter-spacing:3px">▌▌▌ ▌▌ ▌▌▌▌ ▌▌</div>
+      <div id="ticket-id" style="font-family:monospace;font-size:12px;color:var(--text-dim);margin-top:4px"></div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="closeTicket()">Close</button>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© 2026 MOCTALE Pvt. Ltd. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+  let currentFilter = 'all';
+
+  // Load bookings from localStorage
+  function getBookings() {
+    return JSON.parse(localStorage.getItem('moctale_bookings') || '[]');
+  }
+
+  function renderBookings(filter) {
+    const bookings = getBookings();
+    const list = document.getElementById('bookings-list');
+    const empty = document.getElementById('empty-state');
+    list.innerHTML = '';
+
+    const filtered = filter === 'all' ? bookings : bookings.filter(b => b.status === filter);
+
+    // Stats
+    const upcoming  = bookings.filter(b => b.status === 'upcoming').length;
+    const completed = bookings.filter(b => b.status === 'completed').length;
+    const spent     = bookings.reduce((s, b) => s + (b.amount || 0), 0);
+    document.getElementById('stat-total').textContent     = bookings.length;
+    document.getElementById('stat-upcoming').textContent  = upcoming;
+    document.getElementById('stat-completed').textContent = completed;
+    document.getElementById('stat-spent').textContent     = '₹' + spent.toLocaleString('en-IN');
+
+    if (filtered.length === 0) {
+      list.style.display = 'none';
+      empty.style.display = 'block';
+      return;
+    }
+    list.style.display = '';
+    empty.style.display = 'none';
+
+    filtered.forEach((b, idx) => {
+      const isUpcoming = b.status === 'upcoming';
+      const badgeHtml  = isUpcoming
+        ? '<span class="badge badge-green">✅ Confirmed</span>'
+        : b.status === 'cancelled'
+          ? '<span class="badge badge-red">❌ Cancelled</span>'
+          : '<span class="badge badge-blue">🎬 Completed</span>';
+
+      const card = document.createElement('div');
+      card.className = 'booking-card';
+      card.dataset.status = b.status;
+      card.dataset.idx    = idx;
+      if (!isUpcoming) card.style.opacity = '0.8';
+
+      card.innerHTML = `
+        <div class="booking-poster-thumb">
+          <img src="${b.poster || '1.jpeg'}" alt="${b.movie}" onerror="this.src='1.jpeg'">
+        </div>
+        <div>
+          <div class="booking-title">${b.movie}</div>
+          <div class="booking-details">
+            <div class="booking-detail-row">🏛️ <strong>${b.theatre}</strong>${b.location ? ', ' + b.location : ''}</div>
+            <div class="booking-detail-row">📅 <strong>${b.date}</strong> &nbsp;·&nbsp; <strong>${b.time}</strong></div>
+            <div class="booking-detail-row">💺 Seats: <strong>${b.seats}</strong></div>
+            <div class="booking-detail-row">🎭 <strong>${b.format || '2D'}</strong> &nbsp;·&nbsp; ${b.tickets} ticket${b.tickets > 1 ? 's' : ''}</div>
+            <div class="booking-detail-row" style="font-family:monospace;font-size:11px;color:var(--text-dim)">ID: <strong>${b.id}</strong></div>
+          </div>
+        </div>
+        <div class="booking-actions">
+          ${badgeHtml}
+          <div style="text-align:right">
+            <div style="font-size:20px;font-weight:900;color:var(--primary)">₹${b.amount.toLocaleString('en-IN')}</div>
+            <div style="font-size:12px;color:var(--text-dim)">${b.tickets} ticket${b.tickets > 1 ? 's' : ''}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;width:100%">
+            ${isUpcoming ? `<button class="btn btn-primary btn-sm" onclick="viewTicket(${JSON.stringify(b).replace(/"/g,'&quot;')})">🎫 View E-Ticket</button>` : ''}
+            ${isUpcoming ? `<button class="btn btn-outline btn-sm" onclick="cancelBooking(${b.id ? "'" + b.id + "'" : idx}, this)">Cancel</button>` : ''}
+            ${!isUpcoming && b.status !== 'cancelled' ? `<a href="movies.html" class="btn btn-ghost btn-sm">🔄 Book Again</a>` : ''}
+          </div>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function filterBookings(status, btn) {
+    currentFilter = status;
+    document.querySelectorAll('#bookings-tabs .genre-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    renderBookings(status);
+  }
+
+  function viewTicket(b) {
+    const modal = document.getElementById('ticket-modal');
+    modal.style.display = 'flex';
+    document.getElementById('ticket-content').innerHTML =
+      `<strong style="color:var(--primary);font-size:16px">${b.movie}</strong><br>
+       Theatre: ${b.theatre}<br>
+       Date &amp; Time: ${b.date} • ${b.time}<br>
+       Seats: ${b.seats}<br>
+       Format: ${b.format || '2D'}`;
+    document.getElementById('ticket-id').textContent = b.id;
+  }
+
+  function closeTicket() {
+    document.getElementById('ticket-modal').style.display = 'none';
+  }
+
+  function cancelBooking(bookingId, btn) {
+    if (!confirm('Cancel this booking? Refund will be processed in 5-7 days.')) return;
+    const bookings = getBookings();
+    const idx = bookings.findIndex(b => b.id === bookingId);
+    if (idx !== -1) {
+      bookings[idx].status = 'cancelled';
+      localStorage.setItem('moctale_bookings', JSON.stringify(bookings));
+    }
+    showToast('Booking cancelled. Refund in 5–7 days.', 'info');
+    renderBookings(currentFilter);
+  }
+
+  function showToast(msg, type) {
+    const wrap  = document.getElementById('toast-wrap');
+    const toast = document.createElement('div');
+    toast.className = 'toast ' + (type || 'info');
+    const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+    toast.innerHTML = '<span class="toast-icon">' + (icons[type]||'ℹ️') + '</span><span class="toast-msg">' + msg + '</span>';
+    wrap.appendChild(toast);
+    setTimeout(() => toast.remove(), 3500);
+  }
+
+  renderBookings('all');
+
+  // ── Auth State ──
+  (function checkAuth() {
+    const user = localStorage.getItem('moctaleUser');
+    const loginBtn = document.getElementById('nav-login-btn');
+    const avatarWrap = document.getElementById('user-avatar-wrap');
+    if (user) {
+      if(loginBtn) loginBtn.style.display = 'none';
+      avatarWrap.style.display = 'flex';
+      try {
+        const u = JSON.parse(user);
+        const initial = (u.first || 'V')[0].toUpperCase();
+        document.getElementById('nav-avatar-btn').textContent = initial;
+        const name = ((u.first || '') + ' ' + (u.last || '')).trim();
+        document.getElementById('avatar-name').textContent = name || 'My Account';
+      } catch(e) {}
+    } else {
+      if(loginBtn) loginBtn.style.display = '';
+      avatarWrap.style.display = 'flex'; // always show V on bookings page
+    }
+  })();
+
+  function toggleAvatarMenu() {
+    document.getElementById('avatar-dropdown').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    const wrap = document.getElementById('user-avatar-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      const dd = document.getElementById('avatar-dropdown');
+      if (dd) dd.classList.remove('open');
+    }
+  });
+  function logoutUser() {
+    localStorage.removeItem('moctaleUser');
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+</html>
